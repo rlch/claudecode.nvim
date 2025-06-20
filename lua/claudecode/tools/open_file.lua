@@ -200,7 +200,7 @@ local function handler(params)
       -- Find end text if provided
       if params.endText then
         for line_idx = start_line_idx + 1, #lines do
-          local line = lines[line_idx + 1] -- Convert back to 1-based for lines array
+          local line = lines[line_idx] -- Access current line directly
           if line then
             local col_idx = string.find(line, params.endText, 1, true)
             if col_idx then
