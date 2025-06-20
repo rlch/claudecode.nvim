@@ -71,7 +71,7 @@ The WebSocket server implements secure authentication using:
 
 **MCP-Exposed Tools** (with JSON schemas):
 
-- `openFile` - Opens files with optional line/text selection, preview mode, and text pattern matching
+- `openFile` - Opens files with optional line/text selection (startLine/endLine), preview mode, text pattern matching, and makeFrontmost flag
 - `getCurrentSelection` - Gets current text selection from active editor
 - `getLatestSelection` - Gets most recent text selection (even from inactive editors)
 - `getOpenEditors` - Lists currently open files with VS Code-compatible `tabs` structure

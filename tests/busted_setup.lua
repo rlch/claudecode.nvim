@@ -155,7 +155,14 @@ _G.json_encode = function(data)
 
     return table.concat(parts)
   elseif type(data) == "string" then
-    return '"' .. data:gsub('"', '\\"') .. '"'
+    -- Handle escape sequences properly
+    local escaped = data
+      :gsub("\\", "\\\\") -- Escape backslashes first
+      :gsub('"', '\\"') -- Escape quotes
+      :gsub("\n", "\\n") -- Escape newlines
+      :gsub("\r", "\\r") -- Escape carriage returns
+      :gsub("\t", "\\t") -- Escape tabs
+    return '"' .. escaped .. '"'
   elseif type(data) == "boolean" then
     return data and "true" or "false"
   elseif type(data) == "number" then
@@ -197,7 +204,13 @@ _G.json_decode = function(str)
         end
         pos = pos + 1
       end
-      local value = str:sub(start, pos - 1):gsub('\\"', '"')
+      local value = str
+        :sub(start, pos - 1)
+        :gsub('\\"', '"') -- Unescape quotes
+        :gsub("\\\\", "\\") -- Unescape backslashes
+        :gsub("\\n", "\n") -- Unescape newlines
+        :gsub("\\r", "\r") -- Unescape carriage returns
+        :gsub("\\t", "\t") -- Unescape tabs
       pos = pos + 1
       return value
     elseif char == "{" then
