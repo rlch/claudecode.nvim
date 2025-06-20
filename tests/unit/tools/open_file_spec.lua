@@ -29,6 +29,12 @@ describe("Tool: open_file", function()
       table.insert(_G.vim.cmd_history, command)
     end)
 
+    -- Mock vim.json.encode
+    _G.vim.json = _G.vim.json or {}
+    _G.vim.json.encode = spy.new(function(data, opts)
+      return require("tests.busted_setup").json_encode(data)
+    end)
+
     -- Mock window-related APIs
     _G.vim.api.nvim_list_wins = spy.new(function()
       return { 1000 } -- Return a single window
@@ -89,7 +95,10 @@ describe("Tool: open_file", function()
 
     expect(success).to_be_true()
     expect(result).to_be_table()
-    expect(result.message).to_be("File opened: readable_file.txt")
+    expect(result.content).to_be_table()
+    expect(result.content[1]).to_be_table()
+    expect(result.content[1].type).to_be("text")
+    expect(result.content[1].text).to_be("Opened file: readable_file.txt")
 
     assert.spy(_G.vim.fn.expand).was_called_with("readable_file.txt")
     assert.spy(_G.vim.fn.filereadable).was_called_with("readable_file.txt")
@@ -110,7 +119,10 @@ describe("Tool: open_file", function()
     local success, result = pcall(open_file_handler, params)
 
     expect(success).to_be_true()
-    expect(result.message).to_be("File opened: /Users/testuser/.config/nvim/init.lua")
+    expect(result.content).to_be_table()
+    expect(result.content[1]).to_be_table()
+    expect(result.content[1].type).to_be("text")
+    expect(result.content[1].text).to_be("Opened file: /Users/testuser/.config/nvim/init.lua")
     assert.spy(_G.vim.fn.expand).was_called_with("~/.config/nvim/init.lua")
     assert.spy(_G.vim.fn.filereadable).was_called_with("/Users/testuser/.config/nvim/init.lua")
     assert.spy(_G.vim.fn.fnameescape).was_called_with("/Users/testuser/.config/nvim/init.lua")
