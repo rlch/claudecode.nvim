@@ -634,12 +634,8 @@ function M.send_at_mention_for_visual_selection(line1, line2)
     return false
   end
 
-  -- Check if Claude Code integration is running (server may or may not have clients)
+  -- Assume existing Claude Code instance
   local claudecode_main = require("claudecode")
-  if not claudecode_main.state.server then
-    logger.error("selection", "Claude Code integration is not running.")
-    return false
-  end
 
   local sel_to_send
 

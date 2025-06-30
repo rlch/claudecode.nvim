@@ -166,14 +166,6 @@ describe("ClaudeCodeAdd command", function()
     end)
 
     describe("validation", function()
-      it("should error when server is not running", function()
-        claudecode.state.server = nil
-
-        command_handler({ args = "/existing/file.lua" })
-
-        assert.spy(mock_logger.error).was_called()
-      end)
-
       it("should error when no file path is provided", function()
         command_handler({ args = "" })
 

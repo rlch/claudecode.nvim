@@ -695,16 +695,11 @@ function M._create_commands()
   local unified_send_handler = visual_commands.create_visual_command_wrapper(handle_send_normal, handle_send_visual)
 
   vim.api.nvim_create_user_command("ClaudeCodeSend", unified_send_handler, {
-    desc = "Send current visual selection as an at_mention to Claude Code (supports tree visual selection)",
+    desc = "Send current visual selection as an at_mention to existing Claude Code instance (supports tree visual selection)",
     range = true,
   })
 
   local function handle_tree_add_normal()
-    if not M.state.server then
-      logger.error("command", "ClaudeCodeTreeAdd: Claude Code integration is not running.")
-      return
-    end
-
     local integrations = require("claudecode.integrations")
     local files, error = integrations.get_selected_files_from_tree()
 
@@ -747,11 +742,6 @@ function M._create_commands()
   end
 
   local function handle_tree_add_visual(visual_data)
-    if not M.state.server then
-      logger.error("command", "ClaudeCodeTreeAdd_visual: Claude Code integration is not running.")
-      return
-    end
-
     local visual_cmd_module = require("claudecode.visual_commands")
     local files, error = visual_cmd_module.get_files_from_visual_selection(visual_data)
 
@@ -798,15 +788,10 @@ function M._create_commands()
     visual_commands.create_visual_command_wrapper(handle_tree_add_normal, handle_tree_add_visual)
 
   vim.api.nvim_create_user_command("ClaudeCodeTreeAdd", unified_tree_add_handler, {
-    desc = "Add selected file(s) from tree explorer to Claude Code context (supports visual selection)",
+    desc = "Add selected file(s) from tree explorer to existing Claude Code instance (supports visual selection)",
   })
 
   vim.api.nvim_create_user_command("ClaudeCodeAdd", function(opts)
-    if not M.state.server then
-      logger.error("command", "ClaudeCodeAdd: Claude Code integration is not running.")
-      return
-    end
-
     if not opts.args or opts.args == "" then
       logger.error("command", "ClaudeCodeAdd: No file path provided")
       return
@@ -879,7 +864,7 @@ function M._create_commands()
   end, {
     nargs = "+",
     complete = "file",
-    desc = "Add specified file or directory to Claude Code context with optional line range",
+    desc = "Add specified file or directory to existing Claude Code instance with optional line range",
   })
 
   local terminal_ok, terminal = pcall(require, "claudecode.terminal")
