@@ -718,7 +718,7 @@ function M._create_commands()
     local total_count = #files
 
     for _, file_path in ipairs(files) do
-      local success, error_msg = M.send_at_mention(file_path, nil, nil, "ClaudeCodeTreeAdd")
+      local success, error_msg = M._broadcast_at_mention(file_path, nil, nil)
       if success then
         success_count = success_count + 1
       else
@@ -760,7 +760,7 @@ function M._create_commands()
     local total_count = #files
 
     for _, file_path in ipairs(files) do
-      local success, error_msg = M.send_at_mention(file_path, nil, nil, "ClaudeCodeTreeAdd_visual")
+      local success, error_msg = M._broadcast_at_mention(file_path, nil, nil)
       if success then
         success_count = success_count + 1
       else
@@ -847,7 +847,7 @@ function M._create_commands()
     local claude_start_line = start_line and (start_line - 1) or nil
     local claude_end_line = end_line and (end_line - 1) or nil
 
-    local success, error_msg = M.send_at_mention(file_path, claude_start_line, claude_end_line, "ClaudeCodeAdd")
+    local success, error_msg = M._broadcast_at_mention(file_path, claude_start_line, claude_end_line)
     if not success then
       logger.error("command", "ClaudeCodeAdd: " .. (error_msg or "Failed to add file"))
     else
